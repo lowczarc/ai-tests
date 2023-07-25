@@ -5,7 +5,7 @@
     "license": "MIT",
     "bin": "build/tool",
     "dependencies": {
-        "ai-docs": "^1.0.11",
+        "ai-docs": "^1.0.12",
         "fp-ts": "^2.16.0",
         "io-ts": "^2.2.20",
         "polyfact": "^0.1",
