@@ -63,15 +63,29 @@ function references(refs: any, prefix = ""): string {
 (async () => {
     const filePath = process.argv[2];
     if (!filePath) {
-        console.error("Usage: ai-tests <file>");
+        console.error("Usage: ai-tests <input_file>");
         process.exit(1);
     }
+
     const fileContent = fs.readFileSync(filePath, "utf8");
-    const name = filePath.split("/").pop() || "";
-    const [_, ext] = getNameExt(name);
-    const file = [{ path: filePath, name, content: fileContent }];
+    const filename = filePath.split("/").pop() || "";
+    const [_, ext] = getNameExt(filename);
+    const language = extensions[ext];
+
+    const file = [{ path: filePath, name: filename, content: fileContent }];
+
+    // We don't want the logs from ai-docs. Since we are using stdout to send the result back,
+    // we need to disable it
+    const stdout = process.stdout.write;
+    process.stdout.write = () => true;
+
     const res = await generateReferenceForEachFile(file);
 
+    // We restore the stdout
+    process.stdout.write = stdout;
+
+    // For some reason the chunks are not merged by ai-docs
+    // So we need to merge them manually
     const ref = res.map((e: any) => {
         if (!e.chunkTotal || e.chunkTotal <= 1) {
             return e;
@@ -88,18 +102,33 @@ function references(refs: any, prefix = ""): string {
     }).reduce((acc: any, e: any) => ({
         ...acc,
         [e.originalPath]: {
-            description: acc[e.originalPath] ? acc[e.originalPath].description + "\n" + e.reference_json.description : e.reference_json.description,
-            references: acc[e.originalPath] ? [...acc[e.originalPath].references || [], ...e.reference_json.references] : e.reference_json.references,
-            examples: acc[e.originalPath] ? [...acc[e.originalPath].examples || [], ...e.reference_json.examples] : e.reference_json.examples,
+            description: acc[e.originalPath] ?
+                acc[e.originalPath].description + "\n" + e.reference_json.description
+                    : e.reference_json.description,
+            references: acc[e.originalPath] ?
+                [...acc[e.originalPath].references || [], ...e.reference_json.references]
+                    : e.reference_json.references,
+            examples: acc[e.originalPath] ?
+                [...acc[e.originalPath].examples || [], ...e.reference_json.examples]
+                    : e.reference_json.examples,
         }
     }), {});
 
-
+    // We split the references in multiple parts to stay under 1000 tokens
     const splittedRefs = splitString(references(ref[filePath].references), 1000);
 
-    const result = await Promise.all(splittedRefs.map(async (splittedRef: string) => generate(`Generate test in ${extensions[ext]} for this: \`\`\`${splittedRef}\`\`\`\nThe tests should be complete and be launchable\nDon't just create boilerplate\nOnly answer with a single code block containing the ${extensions[ext]} code. Don't write anything else.`).then(res => res.replace(/^(.|\s)*?```[a-zA-Z]*\s?/m, "").replace(/```[^`]*?$/m, "")))).then(res => res.join("\n\n"));
+    // We generate the tests for each splitted references and merge them together
+    const result = await Promise.all(
+        splittedRefs
+            .map(async (splittedRef: string) =>
+                 generate(`Generate test in ${language} for this: \`\`\`${splittedRef}\`\`\`\nThe tests should be complete and be launchable\nDon't just create boilerplate\nOnly answer with a single code block containing the ${language} code. Don't write anything else.`)
+                 .then(res => res
+                       .replace(/^(.|\s)*?```[a-zA-Z]*\s?/m, "")
+                       .replace(/```[^`]*?$/m, "") // We remove the code block and any text before and after if there is any
+        ))).then(res => res.join("\n\n"));
 
     const tests = result;
 
+    // We print the tests
     console.log(tests);
 })();
