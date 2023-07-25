@@ -6,6 +6,22 @@
 
 Although it's not always perfect, it could save you a ton of time and effort. It can provide a solid starting point for simple test suites, sometimes even generating fully working test suites on the first try!
 
+## Getting Your PolyFact Token
+
+AI-Tests uses polyfact to generate AI responses. To use it, you need to get a polyfact token.
+
+Follow these steps to get your PolyFact token:
+
+1. Go to app.polyfact.com.
+2. Connect with GitHub.
+3. Copy the token.
+
+Then, you need to export the PolyFact token in your environment:
+
+```bash
+export POLYFACT_TOKEN=<your_polyfact_token>
+```
+
 ## Usage
 
 To use `ai-tests`, pass the file path to the command as follows:

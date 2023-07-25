@@ -332,10 +332,10 @@ ai-docs-package@^1.0.1, ai-docs-package@^1.0.2:
     polyfact "^0.1.8"
     ts-dedent "^2.2.0"
 
-ai-docs@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/ai-docs/-/ai-docs-1.0.8.tgz#e444b1361abffdde50a12897d0c351612daed9cc"
-  integrity sha512-72nVg0KPLv6gcuHc7RupaVvdWYRqkcBEorY76/9JDwauOKAqI9pIJl5JNn+8qgCEMc8zu88JMVxxdKERA8LOEA==
+ai-docs@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/ai-docs/-/ai-docs-1.0.11.tgz#ac3092d769a8565a98296a179d7695681c6e8b4b"
+  integrity sha512-NiZgV6Q/NjEnbdcNKjdYvySlVaPJOlDSof3WWTswkBX3JXis8RTmJpYHwKwnYf1KuIYQ2D31sanw4cLLCjQAvA==
   dependencies:
     "@types/lodash" "^4.14.195"
     ai-docs-package "^1.0.2"
@@ -343,7 +343,7 @@ ai-docs@^1.0.8:
     io-ts "^2.2.20"
     langchain "^0.0.108"
     lodash "^4.17.21"
-    polyfact "^0.1.9"
+    polyfact "^0.1.12"
     ts-dedent "^2.2.0"
 
 ajv@^6.10.0, ajv@^6.12.4, ajv@~6.12.6:
@@ -1998,10 +1998,22 @@ picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-polyfact@^0.1, polyfact@^0.1.8, polyfact@^0.1.9:
+polyfact@^0.1, polyfact@^0.1.8:
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/polyfact/-/polyfact-0.1.11.tgz#e7d7fc04b0021d1e6efb16bd56bf9ee729facbd2"
   integrity sha512-cP2bAHBIJQzGvXaDLGYg9CUquft+/ltrL3998XXQikomcj4nF+C8brPsGcQiHfdmzwOJOpb3yZwZ6IFRAEHLWg==
+  dependencies:
+    form-data "^4.0.0"
+    fp-ts "^2.16.0"
+    io-ts "^2.2.20"
+    js-tiktoken "^1.0.7"
+    node-fetch "^2.6.1"
+    ts-node "^10.9.1"
+
+polyfact@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/polyfact/-/polyfact-0.1.12.tgz#4bec1de709a24ebe1f0e080a4671a4ec3cfcdb10"
+  integrity sha512-E82wguhSCWJqRcCxpFW/dLH2MCC4jNIp1/iZZ3ciePYs3MLs8+/QwhqUTSGKVoT/GKN5tg0OZ7p5UQLtVTs19Q==
   dependencies:
     form-data "^4.0.0"
     fp-ts "^2.16.0"
