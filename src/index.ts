@@ -1,4 +1,5 @@
 import fs from "fs";
+import ora from "ora";
 import { generate, splitString } from "polyfact";
 import { generateReferenceForEachFile } from "ai-docs";
 
@@ -67,6 +68,7 @@ function references(refs: any, prefix = ""): string {
         process.exit(1);
     }
 
+    const spinner = ora("Loading file").start();
     const fileContent = fs.readFileSync(filePath, "utf8");
     const filename = filePath.split("/").pop() || "";
     const [_, ext] = getNameExt(filename);
@@ -79,6 +81,7 @@ function references(refs: any, prefix = ""): string {
     const stdout = process.stdout.write;
     process.stdout.write = () => true;
 
+    spinner.text = "Generating references";
     const res = await generateReferenceForEachFile(file);
 
     // We restore the stdout
@@ -86,6 +89,7 @@ function references(refs: any, prefix = ""): string {
 
     // For some reason the chunks are not merged by ai-docs
     // So we need to merge them manually
+    spinner.text = "Merging chunks";
     const ref = res.map((e: any) => {
         if (!e.chunkTotal || e.chunkTotal <= 1) {
             return e;
@@ -115,17 +119,21 @@ function references(refs: any, prefix = ""): string {
     }), {});
 
     // We split the references in multiple parts to stay under 1000 tokens
+    spinner.text = "Splitting references";
     const splittedRefs = splitString(references(ref[filePath].references), 1000);
 
     // We generate the tests for each splitted references and merge them together
+    spinner.text = "Generating tests";
     const result = await Promise.all(
         splittedRefs
             .map(async (splittedRef: string) =>
                  generate(`Generate test in ${language} for this: \`\`\`${splittedRef}\`\`\`\nThe tests should be complete and be launchable\nDon't just create boilerplate\nOnly answer with a single code block containing the ${language} code. Don't write anything else.`)
-                 .then(res => res
-                       .replace(/^(.|\s)*?```[a-zA-Z]*\s?/m, "")
-                       .replace(/```[^`]*?$/m, "") // We remove the code block and any text before and after if there is any
+                .then(res => res
+                      .replace(/^(.|\n)*?```[a-zA-Z]*\s?/m, "")
+                      .replace(/```[^`]*?$/m, "") // We remove the code block and any text before and after if there is any
         ))).then(res => res.join("\n\n"));
+
+    spinner.succeed("Tests generated");
 
     const tests = result;
 

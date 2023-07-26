@@ -9,7 +9,8 @@
         "fp-ts": "^2.16.0",
         "io-ts": "^2.2.20",
         "polyfact": "^0.1",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.1",
+        "ora": "^5.4.1"
     },
     "devDependencies": {
         "@types/cli-progress": "^3.11.0",
