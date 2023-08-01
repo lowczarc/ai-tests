@@ -8,11 +8,13 @@ Although it's not always perfect, it could save you a ton of time and effort. It
 
 ## Getting Your PolyFact Token
 
-AI-Tests uses polyfact to generate AI responses. To use it, you need to get a polyfact token.
+AI-Tests uses PolyFact to generate AI responses. PolyFact is a managed backend, it abstract from the client all the hassle of managing different APIs, models, databases, etc...
+
+To use it, you need to get a PolyFact token.
 
 Follow these steps to get your PolyFact token:
 
-1. Go to app.polyfact.com.
+1. Go to app.PolyFact.com.
 2. Connect with GitHub.
 3. Copy the token.
 
