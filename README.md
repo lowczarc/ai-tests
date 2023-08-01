@@ -14,7 +14,7 @@ To use it, you need to get a PolyFact token.
 
 Follow these steps to get your PolyFact token:
 
-1. Go to app.PolyFact.com.
+1. Go to https://app.polyfact.com.
 2. Connect with GitHub.
 3. Copy the token.
 
